@@ -1,0 +1,42 @@
+<resources>
+
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+  </style>
+
+  <style name="ThemeSolinftecWhite" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="android:textColor">@color/preto</item>
+    <item name="iconTint">@color/preto</item>
+    <item name="dividerItem">@color/gray_divider_white</item>
+    <item name="buttonColor">@color/branco_botao</item>
+    <item name="buttonColorPressed">@color/cinza</item>
+    <item name="cardBackground">@color/branco_botao</item>
+    <item name="tabBackground">@color/branco_botao</item>
+    <item name="android:windowBackground">@color/branco_background</item>
+    <item name="android:windowTitleSize">50sp</item>
+    <item name="android:windowFullscreen">true</item>
+  </style>
+
+  <style name="ThemeSolinftecBlack" parent="Theme.MaterialComponents.NoActionBar">
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="android:textColor">@color/branco</item>
+    <item name="iconTint">@color/branco</item>
+    <item name="dividerItem">@color/gray_divider_black</item>
+    <item name="buttonColor">@color/cinza_botao</item>
+    <item name="buttonColorPressed">@color/cinza</item>
+    <item name="cardBackground">@color/preto_botao</item>
+    <item name="tabBackground">@color/cinza_botao</item>
+    <item name="android:windowBackground">@color/preto_background</item>
+    <item name="android:windowTitleSize">50sp</item>
+    <item name="android:windowFullscreen">true</item>
+  </style>
+</resources>

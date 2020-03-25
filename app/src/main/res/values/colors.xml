@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="colorPrimary">#6200EE</color>
+  <color name="colorPrimaryDark">#3700B3</color>
+  <color name="colorAccent">#03DAC5</color>
+
+  <color name="laranja">#FF9E00</color>
+  <item name="branco" type="color">#ffffff</item>
+  <item name="branco_botao" type="color">#ececec</item>
+  <item name="branco_background" type="color">#dddddd</item>
+  <item name="cinza" type="color">#696969</item>
+  <item name="cinza_botao" type="color">#5a5a5a</item>
+  <item name="preto" type="color">#000000</item>
+  <item name="vermelho" type="color">#d71818</item>
+  <item name="vermelho_escuro" type="color">#A02019</item>
+  <item name="azul" type="color">#72c3e1</item>
+  <item name="azul_escuro" type="color">#0774b4</item>
+  <item name="amarelo" type="color">#F5B534</item>
+  <item name="verde" type="color">#6dad42</item>
+  <item name="verde_claro" type="color">#8EC652</item>
+  <item name="preto_background" type="color">#1b1b1b</item>
+  <item name="preto_botao" type="color">#272727</item>
+  <color name="rosa">#F76C6C</color>
+
+
+  <color name="gray_divider_white">#afafaf</color>
+  <color name="gray_divider_black">#3f3f3f</color>
+
+  <item name="label_title_white" type="color">#cccccc</item>
+  <item name="label_title_black" type="color">#313131</item>
+
+  <color name="cor_desabilitado">#c9c8c8</color>
+
+
+  <color name="primaryTouch">#400774b4</color>
+  <color name="primaryWhiteHovered">#1a0774b4</color>
+</resources>

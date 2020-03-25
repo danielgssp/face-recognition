@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="iconTint" format="color" />
+    <attr name="buttonColor" format="color" />
+    <attr name="buttonColorPressed" format="color" />
+    <attr name="dividerItem" format="color" />
+    <attr name="cardBackground" format="color"/>
+</resources>
