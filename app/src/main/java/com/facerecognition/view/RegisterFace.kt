@@ -27,7 +27,7 @@ class RegisterFace : AppCompatActivity() {
 
         initToolbar()
         requestAllPermissions(this)
-        // initFaceRecognition()
+        initFaceRecognition()
     }
 
     private fun initToolbar(){
@@ -63,16 +63,13 @@ class RegisterFace : AppCompatActivity() {
         } else {
             FaceRecognitionUtil.initializeFSDK()
 
-            val detectFace = FSDK.SetFaceDetectionParameters(false, false, 100)
-            Log.d("detectface", "$detectFace")
-
             this.window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
 
             // Camera layer and drawing layer
-            mDraw = ProcessImageAndDrawResults(this, 1)
+            mDraw = ProcessImageAndDrawResults(this)
             mPreview = Preview(this, mDraw)
             mDraw!!.mTracker = FSDK.HTracker()
 
@@ -100,8 +97,8 @@ class RegisterFace : AppCompatActivity() {
             addContentView(
                 mDraw,
                 ViewGroup.LayoutParams(
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    ActionBar.LayoutParams.WRAP_CONTENT
+                    ActionBar.LayoutParams.MATCH_PARENT,
+                    ActionBar.LayoutParams.MATCH_PARENT
                 )
             )
         }
