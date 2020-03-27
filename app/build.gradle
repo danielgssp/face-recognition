@@ -8,12 +8,16 @@ android {
 
     defaultConfig {
         applicationId "com.facerecognition"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    aaptOptions {
+        noCompress "tflite"
     }
 
     buildTypes {
@@ -22,7 +26,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
@@ -36,4 +39,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.android.support:appcompat-v7:'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
 }

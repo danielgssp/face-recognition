@@ -27,7 +27,8 @@ class RegisterFace : AppCompatActivity() {
 
         initToolbar()
         requestAllPermissions(this)
-        // initFaceRecognition()
+
+        initFaceRecognition()
     }
 
     private fun initToolbar(){
