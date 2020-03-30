@@ -2,7 +2,7 @@ package com.luxand
 
 object FSDK {
 
-    val LICENSE_KEY = ""
+    val LICENSE_KEY = "AeXs8g9v4HV+pZJV6MjNx/ytzCDpIukInKio+T/UcXt93UgRVbNgNIp/0BC0t9QK1CCgFak2x5CXbw29Y4F87p4511cSVBHfzxXsxWrg2or/Kh/pfMtLTtHClwn2gs5ZZ4aE7PVoEKCW/NHf7kTHzQaswh5Kp9prMKEg9T27Eyc="
     // Error codes
 
     val FSDKE_OK = 0
