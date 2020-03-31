@@ -45,11 +45,11 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.register_face)
 
         if (hasPermission())
         {
-            setFragment()
+//            setFragment()
         }
         else
         {
