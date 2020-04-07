@@ -23,6 +23,7 @@ import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -96,13 +97,15 @@ public class LegacyCameraConnectionFragment extends Fragment
             camera.release();
           }
 
+          camera.addCallbackBuffer(new byte[ImageUtils.getYUVByteSize(height, width)]);
           camera.setPreviewCallbackWithBuffer(imageListener);
           Camera.Size s = camera.getParameters().getPreviewSize();
-          camera.addCallbackBuffer(new byte[ImageUtils.getYUVByteSize(s.height, s.width)]);
 
           textureView.setAspectRatio(s.height, s.width);
 
           camera.startPreview();
+
+          Log.d("TEST156", "ok");
         }
 
         @Override
@@ -152,7 +155,10 @@ public class LegacyCameraConnectionFragment extends Fragment
     // a camera and start preview from here (otherwise, we wait until the surface is ready in
     // the SurfaceTextureListener).
 
+    Log.d("TEST156", "ok");
+
     if (textureView.isAvailable()) {
+      Log.d("TEST156", "ok");
       camera.startPreview();
     } else {
       textureView.setSurfaceTextureListener(surfaceTextureListener);
@@ -196,7 +202,7 @@ public class LegacyCameraConnectionFragment extends Fragment
     CameraInfo ci = new CameraInfo();
     for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
       Camera.getCameraInfo(i, ci);
-      if (ci.facing == CameraInfo.CAMERA_FACING_BACK) return i;
+      if (ci.facing == CameraInfo.CAMERA_FACING_FRONT) return i;
     }
     return -1; // No camera found
   }

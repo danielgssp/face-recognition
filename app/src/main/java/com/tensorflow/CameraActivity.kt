@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Fragment
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.hardware.camera2.CameraAccessException
@@ -19,8 +20,11 @@ import android.view.Surface
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.facerecognition.R
+import com.facerecognition.facerecognition.ProcessImageAndDrawResults
 import com.tensorflow.CameraConnectionFragment.ConnectionCallback
 import com.tensorflow.env.ImageUtils
+import java.nio.ByteBuffer
+
 
 abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, PreviewCallback
 {
@@ -29,6 +33,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
 
     protected var previewWidth = 0
     protected var previewHeight = 0
+    protected var mDraw: ProcessImageAndDrawResults? = null
 
     private var handler: Handler? = null
     private var handlerThread: HandlerThread? = null
@@ -47,9 +52,11 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_face)
 
+        mDraw = ProcessImageAndDrawResults(this)
+
         if (hasPermission())
         {
-//            setFragment()
+            setFragment()
         }
         else
         {
@@ -95,20 +102,29 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
         handler?.apply { this.post(r) }
     }
 
-    override fun onPreviewFrame(data: ByteArray?, camera: Camera?)
+    override fun onPreviewFrame(data: ByteArray, camera: Camera)
     {
         if (isProcessingFrame)
         {
-            Log.w("CameraActivity", "Dropping frame!")
             return
         }
 
         try
         {
+            //Verify orientation
+            if (this.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                camera.parameters?.set("orientation", "portrait")
+                camera.setDisplayOrientation(90)
+                mDraw?.rotated = true
+            } else {
+                camera.parameters?.set("orientation", "landscape")
+                camera.setDisplayOrientation(0)
+            }
+
             // Initialize the storage bitmaps once when the resolution is known.
             if (rgbBytes == null)
             {
-                val previewSize = camera!!.parameters.previewSize
+                val previewSize = camera.parameters.previewSize
                 previewHeight = previewSize.height
                 previewWidth = previewSize.width
                 rgbBytes = IntArray(previewWidth * previewHeight)
@@ -117,7 +133,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
         }
         catch (e: Exception)
         {
-            Log.e("CameraActivity", "Exception", e)
+            Log.e("CameraActivity", "EXCEPTION", e)
             return
         }
 
@@ -128,10 +144,11 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
         imageConverter = Runnable { ImageUtils.convertYUV420SPToARGB8888(data, previewWidth, previewHeight, rgbBytes) }
 
         postInferenceCallback = Runnable {
-            camera!!.addCallbackBuffer(data)
+            camera.addCallbackBuffer(data)
             isProcessingFrame = false
         }
-        processImage()
+
+        processImage(data)
     }
 
     override fun onImageAvailable(reader: ImageReader?)
@@ -158,6 +175,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
             Trace.beginSection("imageAvailable")
             val planes = image.planes
             fillBytes(planes, yuvBytes)
+
             yRowStride = planes[0].rowStride
             val uvRowStride = planes[1].rowStride
             val uvPixelStride = planes[1].pixelStride
@@ -166,11 +184,15 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
                     yuvBytes[0], yuvBytes[1], yuvBytes[2], previewWidth, previewHeight, yRowStride, uvRowStride, uvPixelStride, rgbBytes
                 )
             }
+
+
             postInferenceCallback = Runnable {
                 image.close()
                 isProcessingFrame = false
             }
-            processImage()
+
+            val yuvData = ImageUtils.YUV420toNV21(image)
+            processImage(yuvData)
         }
         catch (e: java.lang.Exception)
         {
@@ -331,7 +353,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
         }
     }
 
-    protected abstract fun processImage()
+    protected abstract fun processImage(yuvBytes: ByteArray)
 
     protected abstract fun onPreviewSizeChosen(size: Size, rotation: Int)
 

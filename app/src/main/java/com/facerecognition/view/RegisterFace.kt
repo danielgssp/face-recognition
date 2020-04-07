@@ -4,7 +4,9 @@ import android.app.ActionBar
 import android.graphics.*
 import android.media.ImageReader
 import android.os.Bundle
+import android.os.Handler
 import android.os.SystemClock
+import android.util.Log
 import android.util.Size
 import android.util.TypedValue
 import android.view.View
@@ -32,7 +34,6 @@ import java.util.*
 
 class RegisterFace : CameraActivity(), ImageReader.OnImageAvailableListener {
     private var mPreview: Preview? = null
-    private var mDraw: ProcessImageAndDrawResults? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +82,9 @@ class RegisterFace : CameraActivity(), ImageReader.OnImageAvailableListener {
             )
 
             // Camera layer and drawing layer
-            mDraw = ProcessImageAndDrawResults(this)
-            mPreview = Preview(this, mDraw)
+//            mDraw = ProcessImageAndDrawResults(this)
+//            mPreview = Preview(this, mDraw)
+            Log.i("Register", mDraw?.toString())
             mDraw!!.mTracker = FSDK.HTracker()
 
             if (FSDK.FSDKE_OK != FSDK.LoadTrackerMemoryFromFile(mDraw!!.mTracker!!,
@@ -100,11 +102,11 @@ class RegisterFace : CameraActivity(), ImageReader.OnImageAvailableListener {
                 FaceRecognitionUtil.errpos
             )
 
-            frame_camera.addView(
-                mPreview,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+//            frame_camera.addView(
+//                mPreview,
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT
+//            )
 
             addContentView(
                 mDraw,
@@ -222,8 +224,20 @@ class RegisterFace : CameraActivity(), ImageReader.OnImageAvailableListener {
         tracker!!.setFrameConfiguration(width, height, sensorOrientation!!)
     }
 
-    override fun processImage()
+    override fun processImage(yuvData: ByteArray)
     {
+        if (mDraw?.mYUVData == null) {
+            // Initialize the draw-on-top companion
+            mDraw?.mImageWidth =  previewWidth
+            mDraw?.mImageHeight =  previewHeight
+            mDraw?.mRGBData = ByteArray(3 * (mDraw?.mImageWidth ?: 0) * (mDraw?.mImageHeight ?: 0))
+            mDraw?.mYUVData = yuvData
+        }
+
+        // Pass YUV data to draw-on-top companion
+        System.arraycopy(yuvData, 0, mDraw?.mYUVData, 0, yuvData.size)
+        mDraw?.invalidate()
+
         ++timestamp
         val currTimestamp = timestamp
         trackingOverlay!!.postInvalidate()
@@ -234,6 +248,7 @@ class RegisterFace : CameraActivity(), ImageReader.OnImageAvailableListener {
             readyForNextImage()
             return
         }
+
         computingDetection = true
 //        MainActivity.LOGGER.i("Preparing image $currTimestamp for detection in bg thread.")
         rgbFrameBitmap!!.setPixels(getRgbBytes(), 0, width, 0, 0, width, height)
@@ -245,6 +260,7 @@ class RegisterFace : CameraActivity(), ImageReader.OnImageAvailableListener {
         {
             ImageUtils.saveBitmap(croppedBitmap)
         }
+
         runInBackground(Runnable {
 //            MainActivity.LOGGER.i("Running detection on image $currTimestamp")
             val startTime = SystemClock.uptimeMillis()

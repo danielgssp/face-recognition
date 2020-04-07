@@ -60,6 +60,7 @@ class Preview(var mContext: Context, var mDraw: ProcessImageAndDrawResults?) :
                 if (mDraw == null || mFinished)
                     return@PreviewCallback
 
+                Log.d("yuvDATA", data.toString())
                 if (mDraw?.mYUVData == null) {
                     // Initialize the draw-on-top companion
                     val params = camera.parameters
