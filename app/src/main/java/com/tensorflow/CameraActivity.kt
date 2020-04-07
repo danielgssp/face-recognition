@@ -49,7 +49,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.both_services)
+        setContentView(R.layout.detection_activity)
 
         mDraw = ProcessImageAndDrawResults(this)
 

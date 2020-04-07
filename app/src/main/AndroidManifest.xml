@@ -20,22 +20,26 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/ThemeSolinftecWhite">
-    <activity
-        android:name=".view.MainActivity"
-        android:label="MainActivity"
-        android:screenOrientation="landscape">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".view.MainActivity"
+            android:label="MainActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".view.BothServices"
-        android:screenOrientation="landscape">
-    </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.BothServices"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
+              android:name=".view.RegisterFace"
+              android:screenOrientation="landscape">
+        </activity>
       <activity
-          android:name=".view.RegisterFace"
+          android:name=".view.DetectionActivity"
           android:screenOrientation="landscape">
       </activity>
   </application>

@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnBodyDetect.setOnClickListener {
-
+            val intent = Intent(this, DetectionActivity::class.java)
+            startActivity(intent)
         }
 
         btnBoth.setOnClickListener {
