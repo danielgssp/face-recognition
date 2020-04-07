@@ -22,7 +22,8 @@
     android:theme="@style/ThemeSolinftecWhite">
     <activity
         android:name=".view.MainActivity"
-        android:label="MainActivity">
+        android:label="MainActivity"
+        android:screenOrientation="landscape">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
@@ -30,9 +31,13 @@
         </intent-filter>
     </activity>
     <activity
-        android:name=".view.RegisterFace"
+        android:name=".view.BothServices"
         android:screenOrientation="landscape">
     </activity>
+      <activity
+          android:name=".view.RegisterFace"
+          android:screenOrientation="landscape">
+      </activity>
   </application>
 
 </manifest>

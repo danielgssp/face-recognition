@@ -23,7 +23,6 @@ import com.facerecognition.R
 import com.facerecognition.facerecognition.ProcessImageAndDrawResults
 import com.tensorflow.CameraConnectionFragment.ConnectionCallback
 import com.tensorflow.env.ImageUtils
-import java.nio.ByteBuffer
 
 
 abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, PreviewCallback
@@ -50,7 +49,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.register_face)
+        setContentView(R.layout.both_services)
 
         mDraw = ProcessImageAndDrawResults(this)
 

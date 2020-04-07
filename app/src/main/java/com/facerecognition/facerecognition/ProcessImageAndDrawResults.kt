@@ -21,6 +21,7 @@ import com.luxand.FSDK.HTracker
 import com.luxand.FSDK.LoadImageFromBuffer
 import com.luxand.FSDK.MirrorImage
 import com.luxand.FSDK.RotateImage90
+import kotlinx.android.synthetic.main.register_face.view.*
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
@@ -176,6 +177,7 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
 
                 if (names.count() > 0 && names[0].isNotEmpty()) {
                     Log.d("test", names[0])
+                    rootView.tvRegisterMsg.text = "${names[0].capitalize()} are already registered!"
                     named = true
                 }
             }
