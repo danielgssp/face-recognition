@@ -25,6 +25,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:context="com.tensorflow.CameraActivity" />
+        tools:context="com.tensorflow.CameraActivity">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvDetectMsg"
+        android:layout_width="143dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="163dp"
+        android:layout_marginBottom="136dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/container"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

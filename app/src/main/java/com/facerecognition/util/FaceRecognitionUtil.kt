@@ -18,7 +18,6 @@ class FaceRecognitionUtil {
         private const val PERMISSION_ALL = 1
 
         const val ACTION_REGISTER = 1
-        const val actionFaceDetection = 1
         const val parameters = "ContinuousVideoFeed=true;FacialFeatureJitterSuppression=0;RecognitionPrecision=1;Threshold=0.996;Threshold2=0.9995;ThresholdFeed=0.97;MemoryLimit=2000;HandleArbitraryRotations=false;DetermineFaceRotationAngle=false;InternalResizeWidth=384;FaceDetectionThreshold=3;"
         //"ContinuousVideoFeed=true;FacialFeatureJitterSuppression=0;RecognitionPrecision=1;Threshold=0.996;Threshold2=0.9995;ThresholdFeed=0.97;MemoryLimit=2000;HandleArbitraryRotations=false;DetermineFaceRotationAngle=false;InternalResizeWidth=70;FaceDetectionThreshold=3;"
 
@@ -32,7 +31,7 @@ class FaceRecognitionUtil {
             Manifest.permission.CAMERA
         )
 
-        fun hasPermissions(context: Context, vararg permissions: String): Boolean = permissions.all {
+        private fun hasPermissions(context: Context, vararg permissions: String): Boolean = permissions.all {
             ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
 

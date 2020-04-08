@@ -15,34 +15,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/frame_camera"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvMensagem"
-        app:layout_constraintEnd_toStartOf="@id/container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvMensagem"
+        app:layout_constraintBottom_toTopOf="@+id/tvRegisterMsg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frame_camera"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:context="com.tensorflow.CameraActivity" />
 
     <TextView
-        android:id="@+id/tvMensagem"
+        android:id="@+id/tvBothMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Posicione o rosto para cadastrar"
+        android:text=""
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"

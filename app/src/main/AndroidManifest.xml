@@ -42,6 +42,10 @@
           android:name=".view.DetectionActivity"
           android:screenOrientation="landscape">
       </activity>
+      <activity
+          android:name=".view.FaceRecon"
+          android:screenOrientation="landscape">
+      </activity>
   </application>
 
 </manifest>

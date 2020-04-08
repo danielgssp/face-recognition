@@ -18,6 +18,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btnFaceRecon.setOnClickListener {
+            val intent = Intent(this, FaceRecon::class.java)
+            startActivity(intent)
+        }
+
         btnBodyDetect.setOnClickListener {
             val intent = Intent(this, DetectionActivity::class.java)
             startActivity(intent)

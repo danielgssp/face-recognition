@@ -1,6 +1,7 @@
 package com.facerecognition.view
 
 import android.app.ActionBar
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +9,14 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.facerecognition.R
 import com.facerecognition.facerecognition.FaceRecognitionUtil
+import com.facerecognition.facerecognition.FaceRecognitionUtil.Companion.ACTION_REGISTER
 import com.facerecognition.facerecognition.Preview
 import com.facerecognition.facerecognition.ProcessImageAndDrawResults
 import com.luxand.FSDK
+import com.luxand.FSDK.ClearTracker
 import kotlinx.android.synthetic.main.layout_toolbar_solinftec.view.*
 import kotlinx.android.synthetic.main.register_face.*
-import kotlinx.android.synthetic.main.register_face.toolbar
+
 
 class RegisterFace: AppCompatActivity() {
     private var mDraw: ProcessImageAndDrawResults? = null
@@ -22,6 +25,10 @@ class RegisterFace: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_face)
+
+        btnDeleteFaces.setOnClickListener {
+            deleteFaces()
+        }
 
         initToolbar()
         initFaceRecognition()
@@ -59,7 +66,7 @@ class RegisterFace: AppCompatActivity() {
             )
 
             // Camera layer and drawing layer
-            mDraw = ProcessImageAndDrawResults(this)
+            mDraw = ProcessImageAndDrawResults(this, ACTION_REGISTER)
             mPreview = Preview(this, mDraw)
 
             mDraw!!.mTracker = FSDK.HTracker()
@@ -100,6 +107,23 @@ class RegisterFace: AppCompatActivity() {
         if(mDraw != null) {
             resumeProcessingFrames()
         }
+    }
+
+    private fun deleteFaces() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Are you sure to clear the memory?")
+            .setPositiveButton(
+                "Ok"
+            ) { _, _ ->
+                pauseProcessingFrames()
+                ClearTracker(mDraw!!.mTracker!!)
+                resumeProcessingFrames()
+            }
+            .setNegativeButton(
+                "Cancel"
+            ) { _, _ -> }
+            .setCancelable(false) // cancel with button only
+            .show()
     }
 
     private fun pauseProcessingFrames() {
