@@ -180,7 +180,7 @@ class BothServices : CameraActivity(), ImageReader.OnImageAvailableListener {
         )
         borderedText = BorderedText(textSizePx)
         borderedText!!.setTypeface(Typeface.MONOSPACE)
-        tracker = MultiBoxTracker(this)
+        tracker = MultiBoxTracker(this, null)
         var cropSize = TF_OD_API_INPUT_SIZE
         try
         {

@@ -1,22 +1,14 @@
 package com.facerecognition.view
 
-import android.app.ActionBar
 import android.graphics.*
 import android.media.ImageReader
-import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.util.Size
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import com.facerecognition.R
-import com.facerecognition.facerecognition.FaceRecognitionUtil
-import com.facerecognition.facerecognition.FaceRecognitionUtil.Companion.requestAllPermissions
-import com.facerecognition.facerecognition.Preview
-import com.luxand.FSDK
 import com.tensorflow.CameraActivity
 import com.tensorflow.customview.OverlayView
 import com.tensorflow.env.BorderedText
@@ -24,9 +16,9 @@ import com.tensorflow.env.ImageUtils
 import com.tensorflow.tflite.Classifier
 import com.tensorflow.tflite.TFLiteObjectDetectionAPIModel
 import com.tensorflow.tracking.MultiBoxTracker
+import kotlinx.android.synthetic.main.detection_activity.*
 import kotlinx.android.synthetic.main.layout_toolbar_solinftec.toolbar
 import kotlinx.android.synthetic.main.layout_toolbar_solinftec.view.*
-import kotlinx.android.synthetic.main.register_face.*
 import java.io.IOException
 import java.util.*
 
@@ -89,7 +81,7 @@ class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener
         )
         borderedText = BorderedText(textSizePx)
         borderedText!!.setTypeface(Typeface.MONOSPACE)
-        tracker = MultiBoxTracker(this)
+        tracker = MultiBoxTracker(this, tvDetectMsg)
         var cropSize = TF_OD_API_INPUT_SIZE
         try
         {
@@ -124,11 +116,11 @@ class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener
         frameToCropTransform!!.invert(cropToFrameTransform)
         trackingOverlay = findViewById<View>(R.id.tracking_overlay) as OverlayView
         trackingOverlay!!.addCallback {
-            tracker!!.draw(it)
-            if (false)
-            {
-                tracker!!.drawDebug(it)
-            }
+//            tracker!!.draw(it)
+//            if (false)
+//            {
+//                tracker!!.drawDebug(it)
+//            }
         }
         tracker!!.setFrameConfiguration(width, height, sensorOrientation!!)
     }

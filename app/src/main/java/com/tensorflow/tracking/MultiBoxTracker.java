@@ -25,8 +25,10 @@ import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.widget.TextView;
 
 import com.tensorflow.env.Logger;
 import com.tensorflow.env.ImageUtils;
@@ -66,11 +68,12 @@ public class MultiBoxTracker {
   private final float textSizePx;
   private final BorderedText borderedText;
   private Matrix frameToCanvasMatrix;
+  private TextView tvDetectMessage;
   private int frameWidth;
   private int frameHeight;
   private int sensorOrientation;
 
-  public MultiBoxTracker(final Context context) {
+  public MultiBoxTracker(final Context context, TextView tvDetectMsg) {
     for (final int color : COLORS) {
       availableColors.add(color);
     }
@@ -81,6 +84,8 @@ public class MultiBoxTracker {
     boxPaint.setStrokeCap(Cap.ROUND);
     boxPaint.setStrokeJoin(Join.ROUND);
     boxPaint.setStrokeMiter(100);
+
+    this.tvDetectMessage = tvDetectMsg;
 
     textSizePx =
         TypedValue.applyDimension(
@@ -114,7 +119,7 @@ public class MultiBoxTracker {
   }
 
   public synchronized void trackResults(final List<Recognition> results, final long timestamp) {
-//    logger.i("Processing %d results from %d", results.size(), timestamp);
+    logger.i("Processing %d results from %d", results.size(), timestamp);
     processResults(results);
   }
 
@@ -151,6 +156,7 @@ public class MultiBoxTracker {
               : String.format("%.2f", (100 * recognition.detectionConfidence));
       //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.top,
       // labelString);
+
       borderedText.drawText(
           canvas, trackedPos.left + cornerSize, trackedPos.top, labelString + "%", boxPaint);
     }
@@ -197,6 +203,10 @@ public class MultiBoxTracker {
       trackedRecognition.title = potential.second.getTitle();
       trackedRecognition.color = COLORS[trackedObjects.size()];
       trackedObjects.add(trackedRecognition);
+
+      if (tvDetectMessage != null) {
+        tvDetectMessage.setText(potential.second.getTitle() + " " + String.format("%.2f", (100 * potential.first)) + "%");
+      }
 
       if (trackedObjects.size() >= COLORS.length) {
         break;
