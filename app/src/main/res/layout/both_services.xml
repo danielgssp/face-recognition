@@ -20,8 +20,9 @@
         android:id="@+id/container"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvRegisterMsg"
+        app:layout_constraintBottom_toTopOf="@+id/tvBothMsg"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:context="com.tensorflow.CameraActivity" />
 
