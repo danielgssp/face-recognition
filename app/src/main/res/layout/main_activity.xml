@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:text="Register Face"
+        android:enabled="false"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="50dp"/>
@@ -20,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Face Recon"
+        android:enabled="false"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"/>
 
@@ -38,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:text="Both"
+        android:enabled="false"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"/>
 </LinearLayout>

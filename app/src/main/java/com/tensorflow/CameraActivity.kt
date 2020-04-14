@@ -113,7 +113,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
             //Verify orientation
             if (this.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
                 camera.parameters?.set("orientation", "portrait")
-                camera.setDisplayOrientation(90)
+                camera.setDisplayOrientation(180)
                 mDraw?.rotated = true
             } else {
                 camera.parameters?.set("orientation", "landscape")
