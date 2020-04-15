@@ -24,6 +24,8 @@ import android.graphics.Paint.Cap;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -205,7 +207,12 @@ public class MultiBoxTracker {
       trackedObjects.add(trackedRecognition);
 
       if (tvDetectMessage != null) {
-        tvDetectMessage.setText(potential.second.getTitle() + " " + String.format("%.2f", (100 * potential.first)) + "%");
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+          @Override
+          public void run() {
+            tvDetectMessage.setText(potential.second.getTitle() + " " + String.format("%.2f", (100 * potential.first)) + "%");
+          }
+        });
       }
 
       if (trackedObjects.size() >= COLORS.length) {
