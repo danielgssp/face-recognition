@@ -1,6 +1,5 @@
 package com.facerecognition.facerecognition
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Configuration
@@ -10,8 +9,8 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import com.facerecognition.R
-import com.facerecognition.facerecognition.FaceRecognitionUtil.Companion.ACTION_REGISTER
-import com.facerecognition.interfaces.RegisterFaceInterface
+import com.facerecognition.util.FaceRecognitionUtil.Companion.ACTION_REGISTER
+import com.facerecognition.util.FaceRectangle
 import com.luxand.FSDK
 import com.luxand.FSDK.CopyImage
 import com.luxand.FSDK.CreateEmptyImage
@@ -26,7 +25,7 @@ import com.luxand.FSDK.LoadImageFromBuffer
 import com.luxand.FSDK.MirrorImage
 import com.luxand.FSDK.RotateImage90
 import kotlinx.android.synthetic.main.detection_activity.view.*
-import kotlinx.android.synthetic.main.face_recon.view.*
+import kotlinx.android.synthetic.main.face_recognition.view.*
 import kotlinx.android.synthetic.main.register_face.view.*
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -44,7 +43,9 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
     var first_frame_saved: Boolean
     var rotated: Boolean
 
+
     private var actionScreen = 0
+    private var codOperator = ""
     private var mTouchedIndex: Int
     private var mContext: Context
     private val mFacePositions = arrayOfNulls<FaceRectangle>(MAX_FACES)
@@ -52,9 +53,11 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
     private val faceLock: Lock = ReentrantLock()
 
     constructor(context: Context,
-                action:Int
+                action:Int,
+                codOperator: String
     ) : this(context) {
         this.actionScreen = action
+        this.codOperator = codOperator
     }
 
     init {
@@ -172,25 +175,17 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
         }
         faceLock.unlock()
 
-        if (actionScreen != ACTION_REGISTER) {
-            rootView?.tvDetectMsg?.text = ""
-            rootView?.tvFaceRecon?.text =  "Posicione para reconhecer o rosto"
-        }
-
         // Mark and name faces
         for (i in 0 until face_count[0]) {
             val index = i.toInt()
             var named = false
+
             if (IDs[index].toInt() != -1) {
                 val names = arrayOf("")
                 mTracker?.let { FSDK.GetAllNames(it, IDs[index], names, 1024) }
 
                 if (names.count() > 0 && names[0].isNotEmpty()) {
                     Log.d("test", names[0])
-                    if (actionScreen != ACTION_REGISTER) {
-                        rootView?.tvDetectMsg?.text = "Hello ${names[0].capitalize()}"
-                        rootView?.tvFaceRecon?.text =  "Hello ${names[0].capitalize()}"
-                    }
                     named = true
                 }
             }
@@ -198,9 +193,6 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
             if (!named) {
                 if(actionScreen == ACTION_REGISTER) {
                     registerFace()
-                }else {
-                    rootView?.tvDetectMsg?.text = "Face not recognized!"
-                    rootView?.tvFaceRecon?.text =  "Face not recognized!"
                 }
             }
         }
@@ -240,12 +232,6 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
                         FSDK.LockID(mTracker!!, mTouchedID)
                         FSDK.SetName(mTracker!!, mTouchedID, input.text.toString())
                         mTouchedIndex = -1
-                        rootView?.tvRegisterMsg?.setTextColor(resources.getColor(R.color.verde_claro))
-                        rootView?.tvRegisterMsg?.text = "Saved Successfully"
-                        Handler().postDelayed({
-                            rootView?.tvRegisterMsg?.setTextColor(resources.getColor(R.color.preto))
-                            rootView?.tvRegisterMsg?.text = "Posicione o rosto para cadastrar"
-                        }, 1500)
                         FSDK.UnlockID(mTracker!!, mTouchedID)
                     }
                     .setNegativeButton("Cancel"

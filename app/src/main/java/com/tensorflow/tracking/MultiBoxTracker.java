@@ -75,7 +75,7 @@ public class MultiBoxTracker {
   private int frameHeight;
   private int sensorOrientation;
 
-  public MultiBoxTracker(final Context context, TextView tvDetectMsg) {
+  public MultiBoxTracker(final Context context) {
     for (final int color : COLORS) {
       availableColors.add(color);
     }
@@ -86,8 +86,6 @@ public class MultiBoxTracker {
     boxPaint.setStrokeCap(Cap.ROUND);
     boxPaint.setStrokeJoin(Join.ROUND);
     boxPaint.setStrokeMiter(100);
-
-    this.tvDetectMessage = tvDetectMsg;
 
     textSizePx =
         TypedValue.applyDimension(

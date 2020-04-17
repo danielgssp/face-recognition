@@ -1,54 +1,49 @@
-package com.facerecognition.view
+package com.facerecognition.view.fragment
 
 import android.app.ActionBar
-import android.app.AlertDialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.facerecognition.R
-import com.facerecognition.facerecognition.FaceRecognitionUtil
-import com.facerecognition.facerecognition.FaceRecognitionUtil.Companion.ACTION_REGISTER
+import com.facerecognition.util.FaceRecognitionUtil
 import com.facerecognition.facerecognition.Preview
 import com.facerecognition.facerecognition.ProcessImageAndDrawResults
 import com.luxand.FSDK
-import com.luxand.FSDK.ClearTracker
+import kotlinx.android.synthetic.main.face_recognition.*
 import kotlinx.android.synthetic.main.layout_toolbar_solinftec.view.*
-import kotlinx.android.synthetic.main.register_face.*
 
-
-class RegisterFace: AppCompatActivity() {
+class FaceRecognitionFragment: Fragment() {
     private var mDraw: ProcessImageAndDrawResults? = null
     private var mPreview: Preview? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.register_face)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        btnDeleteFaces.setOnClickListener {
-            deleteFaces()
-        }
-
-        initToolbar()
         initFaceRecognition()
+        return inflater.inflate(R.layout.face_recognition, container, false)
     }
 
-    private fun initToolbar(){
-        toolbar.tvBarTitle.text = "Register Face"
-        toolbar.btnMenu.visibility = View.GONE
-        toolbar.imgBtnBack.setOnClickListener {
-            finish()
-        }
-    }
-
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         if(mDraw != null) {
             pauseProcessingFrames()
             FSDK.SaveTrackerMemoryToFile(mDraw!!.mTracker!!,
-                FaceRecognitionUtil.getTemplatePath(application)
+                FaceRecognitionUtil.getTemplatePath(activity?.application!!)
             )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(mDraw != null) {
+            resumeProcessingFrames()
         }
     }
 
@@ -56,27 +51,22 @@ class RegisterFace: AppCompatActivity() {
         var res = FSDK.ActivateLibrary(FSDK.LICENSE_KEY)
 
         if (res != FSDK.FSDKE_OK) {
-            FaceRecognitionUtil.showErrorAndClose("FaceSDK activation failed", res, this)
+            FaceRecognitionUtil.showErrorAndClose("FaceSDK activation failed", res, activity!!)
         } else {
             FaceRecognitionUtil.initializeFSDK()
 
-            this.window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-
             // Camera layer and drawing layer
-            mDraw = ProcessImageAndDrawResults(this, ACTION_REGISTER)
-            mPreview = Preview(this, mDraw)
+            mDraw = ProcessImageAndDrawResults(activity!!)
+            mPreview = Preview(activity!!, mDraw)
 
             mDraw!!.mTracker = FSDK.HTracker()
 
             if (FSDK.FSDKE_OK != FSDK.LoadTrackerMemoryFromFile(mDraw!!.mTracker!!,
-                    FaceRecognitionUtil.getTemplatePath(application)
+                    FaceRecognitionUtil.getTemplatePath(activity?.application!!)
                 )) {
                 res = FSDK.CreateTracker(mDraw!!.mTracker!!)
                 if (FSDK.FSDKE_OK != res) {
-                    FaceRecognitionUtil.showErrorAndClose("Error creating tracker", res, this)
+                    FaceRecognitionUtil.showErrorAndClose("Error creating tracker", res, activity!!)
                 }
             }
 
@@ -86,13 +76,13 @@ class RegisterFace: AppCompatActivity() {
                 FaceRecognitionUtil.errpos
             )
 
-            register_frame.addView(
+            recon_frame.addView(
                 mPreview,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
 
-            addContentView(
+            activity?.addContentView(
                 mDraw,
                 ViewGroup.LayoutParams(
                     ActionBar.LayoutParams.MATCH_PARENT,
@@ -100,30 +90,6 @@ class RegisterFace: AppCompatActivity() {
                 )
             )
         }
-    }
-
-    public override fun onResume() {
-        super.onResume()
-        if(mDraw != null) {
-            resumeProcessingFrames()
-        }
-    }
-
-    private fun deleteFaces() {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("Are you sure to clear the memory?")
-            .setPositiveButton(
-                "Ok"
-            ) { _, _ ->
-                pauseProcessingFrames()
-                ClearTracker(mDraw!!.mTracker!!)
-                resumeProcessingFrames()
-            }
-            .setNegativeButton(
-                "Cancel"
-            ) { _, _ -> }
-            .setCancelable(false) // cancel with button only
-            .show()
     }
 
     private fun pauseProcessingFrames() {
@@ -143,4 +109,5 @@ class RegisterFace: AppCompatActivity() {
         mDraw!!.mStopped = 0
         mDraw!!.mStopping = 0
     }
+
 }

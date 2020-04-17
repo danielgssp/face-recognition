@@ -21,7 +21,7 @@
     android:supportsRtl="true"
     android:theme="@style/ThemeSolinftecWhite">
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:label="MainActivity"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -31,19 +31,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.BothServices"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity
-              android:name=".view.RegisterFace"
+              android:name=".view.activity.RegisterFaceActivity"
               android:screenOrientation="landscape">
         </activity>
       <activity
-          android:name=".view.DetectionActivity"
-          android:screenOrientation="landscape">
-      </activity>
-      <activity
-          android:name=".view.FaceRecon"
+          android:name=".view.fragment.DetectionFragment"
           android:screenOrientation="landscape">
       </activity>
   </application>

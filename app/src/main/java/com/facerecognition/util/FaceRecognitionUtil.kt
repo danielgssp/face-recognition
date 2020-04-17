@@ -1,4 +1,4 @@
-package com.facerecognition.facerecognition
+package com.facerecognition.util
 
 import android.Manifest
 import android.app.Activity
@@ -6,11 +6,9 @@ import android.app.AlertDialog
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.luxand.FSDK
 import java.io.File
-import kotlin.jvm.internal.FunctionReference
 
 class FaceRecognitionUtil {
     companion object {
@@ -57,9 +55,7 @@ class FaceRecognitionUtil {
             builder.setMessage("$error: $code")
                 .setPositiveButton("Ok"
                 ) { _, _ ->
-                    android.os.Process.killProcess(
-                        android.os.Process.myPid()
-                    )
+
                 }.show()
         }
     }

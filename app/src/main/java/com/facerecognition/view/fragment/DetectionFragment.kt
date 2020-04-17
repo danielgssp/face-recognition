@@ -1,14 +1,14 @@
-package com.facerecognition.view
+package com.facerecognition.view.fragment
 
 import android.graphics.*
 import android.media.ImageReader
 import android.os.SystemClock
-import android.util.Log
 import android.util.Size
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import com.facerecognition.R
+import com.facerecognition.interfaces.DetectionFragmentInterface
 import com.tensorflow.CameraActivity
 import com.tensorflow.customview.OverlayView
 import com.tensorflow.env.BorderedText
@@ -16,19 +16,19 @@ import com.tensorflow.env.ImageUtils
 import com.tensorflow.tflite.Classifier
 import com.tensorflow.tflite.TFLiteObjectDetectionAPIModel
 import com.tensorflow.tracking.MultiBoxTracker
-import kotlinx.android.synthetic.main.detection_activity.*
-import kotlinx.android.synthetic.main.layout_toolbar_solinftec.toolbar
-import kotlinx.android.synthetic.main.layout_toolbar_solinftec.view.*
 import java.io.IOException
 import java.util.*
 
-class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener {
+class DetectionFragment() : CameraActivity(), ImageReader.OnImageAvailableListener {
+    private var listenerDetection: DetectionFragmentInterface? = null
+
     // Configuration values for the prepackaged SSD model.
     private val TF_OD_API_INPUT_SIZE = 300
     private val TF_OD_API_IS_QUANTIZED = true
     private val TF_OD_API_MODEL_FILE = "detect.tflite"
     private val TF_OD_API_LABELS_FILE = "file:///android_asset/labelmap.txt"
-    private val MODE = DetectorMode.TF_OD_API
+    private val MODE =
+        DetectorMode.TF_OD_API
 
     // Minimum detection confidence to track a detection.
     private val MINIMUM_CONFIDENCE_TF_OD_API = 0.5f
@@ -60,18 +60,8 @@ class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener
 
     private var borderedText: BorderedText? = null
 
-    override fun onStart() {
-        super.onStart()
-
-        initToolbar()
-    }
-
-    private fun initToolbar(){
-        toolbar.tvBarTitle.text = "Body Detect"
-        toolbar.btnMenu.visibility = View.GONE
-        toolbar.imgBtnBack.setOnClickListener {
-            finish()
-        }
+    constructor(detectionFragmentInterface: DetectionFragmentInterface) : this() {
+        this.listenerDetection = detectionFragmentInterface
     }
 
     override fun onPreviewSizeChosen(size: Size, rotation: Int)
@@ -81,12 +71,12 @@ class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener
         )
         borderedText = BorderedText(textSizePx)
         borderedText!!.setTypeface(Typeface.MONOSPACE)
-        tracker = MultiBoxTracker(this, tvDetectMsg)
+        tracker = MultiBoxTracker(activity)
         var cropSize = TF_OD_API_INPUT_SIZE
         try
         {
             detector = TFLiteObjectDetectionAPIModel.create(
-                assets, TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_INPUT_SIZE, TF_OD_API_IS_QUANTIZED
+                activity?.assets, TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_INPUT_SIZE, TF_OD_API_IS_QUANTIZED
             )
             cropSize = TF_OD_API_INPUT_SIZE
         }
@@ -95,10 +85,10 @@ class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener
             e.printStackTrace()
 //            MainActivity.LOGGER.e(e, "Exception initializing classifier!")
             val toast = Toast.makeText(
-                applicationContext, "Classifier could not be initialized", Toast.LENGTH_SHORT
+                activity, "Classifier could not be initialized", Toast.LENGTH_SHORT
             )
             toast.show()
-            finish()
+            activity?.finish()
         }
         width = size.width
         height = size.height
@@ -114,7 +104,7 @@ class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener
         )
         cropToFrameTransform = Matrix()
         frameToCropTransform!!.invert(cropToFrameTransform)
-        trackingOverlay = findViewById<View>(R.id.tracking_overlay) as OverlayView
+        trackingOverlay = activity?.findViewById<View>(R.id.tracking_overlay) as OverlayView
         trackingOverlay!!.addCallback {
 //            tracker!!.draw(it)
 //            if (false)
@@ -169,6 +159,7 @@ class DetectionActivity : CameraActivity(), ImageReader.OnImageAvailableListener
             val mappedRecognitions: MutableList<Classifier.Recognition> = LinkedList()
             for (result in results)
             {
+                listenerDetection?.confidenceRate(result.id, result.title, result.confidence)
                 val location = result.location
                 if (location != null && result.confidence >= minimumConfidence)
                 {

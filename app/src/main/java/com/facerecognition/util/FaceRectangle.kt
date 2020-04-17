@@ -1,4 +1,4 @@
-package com.facerecognition.facerecognition
+package com.facerecognition.util
 
 class FaceRectangle {
     var x1: Int = 0

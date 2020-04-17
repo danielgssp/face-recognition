@@ -1,7 +1,6 @@
 package com.tensorflow
 
 import android.Manifest
-import android.app.Fragment
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -16,20 +15,20 @@ import android.media.ImageReader.OnImageAvailableListener
 import android.os.*
 import android.util.Log
 import android.util.Size
+import android.view.LayoutInflater
 import android.view.Surface
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.facerecognition.R
 import com.facerecognition.facerecognition.ProcessImageAndDrawResults
 import com.tensorflow.CameraConnectionFragment.ConnectionCallback
 import com.tensorflow.env.ImageUtils
 
 
-abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, PreviewCallback
+abstract class CameraActivity : Fragment(), OnImageAvailableListener, PreviewCallback
 {
-    private val PERMISSIONS_REQUEST = 1
-    private val PERMISSION_CAMERA = Manifest.permission.CAMERA
-
     protected var previewWidth = 0
     protected var previewHeight = 0
     protected var mDraw: ProcessImageAndDrawResults? = null
@@ -46,21 +45,15 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
     private var rgbBytes: IntArray? = null
     private var imageConverter: Runnable? = null
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.detection_activity)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        mDraw = ProcessImageAndDrawResults(this)
+        setFragment()
 
-        if (hasPermission())
-        {
-            setFragment()
-        }
-        else
-        {
-            requestPermission()
-        }
+        return inflater.inflate(R.layout.detection_activity, container, false)
     }
 
     @Synchronized
@@ -202,56 +195,6 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
         Trace.endSection()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray)
-    {
-        if (requestCode == PERMISSIONS_REQUEST)
-        {
-            if (allPermissionsGranted(grantResults))
-            {
-                setFragment()
-            }
-            else
-            {
-                requestPermission()
-            }
-        }
-    }
-
-    private fun allPermissionsGranted(grantResults: IntArray): Boolean
-    {
-        for (result in grantResults)
-        {
-            if (result != PackageManager.PERMISSION_GRANTED)
-            {
-                return false
-            }
-        }
-        return true
-    }
-
-    private fun hasPermission(): Boolean
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            return checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED
-        }
-
-        return true
-    }
-
-    private fun requestPermission()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA))
-            {
-                val message = "Camera permission is required for this demo"
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-            }
-            requestPermissions(arrayOf(PERMISSION_CAMERA), PERMISSIONS_REQUEST)
-        }
-    }
-
     private fun isHardwareLevelSupported(characteristics: CameraCharacteristics): Boolean
     {
         val requiredLevel = CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL
@@ -266,7 +209,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
 
     private fun chooseCamera(): String?
     {
-        val manager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        val manager = activity?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try
         {
             for (cameraId in manager.cameraIdList)
@@ -311,7 +254,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
         {
             fragment = LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize())
         }
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+        fragmentManager?.beginTransaction()?.replace(R.id.container, fragment)?.commit()
     }
 
     protected open fun getRgbBytes(): IntArray?
@@ -343,7 +286,7 @@ abstract class CameraActivity : AppCompatActivity(), OnImageAvailableListener, P
 
     protected open fun getScreenOrientation(): Int
     {
-        return when (windowManager.defaultDisplay.rotation)
+        return when (activity?.windowManager?.defaultDisplay?.rotation)
         {
             Surface.ROTATION_270 -> 270
             Surface.ROTATION_180 -> 180

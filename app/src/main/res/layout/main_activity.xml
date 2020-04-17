@@ -3,7 +3,7 @@
     android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".view.BothServices">
+    tools:context=".view.activity.MainActivity">
     <Button
         android:id="@+id/btnRegisterFace"
         android:layout_width="match_parent"
@@ -31,16 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Body Detect"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"/>
-
-    <Button
-        android:id="@+id/btnBoth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="Both"
-        android:enabled="false"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"/>
 </LinearLayout>
