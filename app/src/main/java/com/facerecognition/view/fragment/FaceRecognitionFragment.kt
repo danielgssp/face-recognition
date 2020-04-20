@@ -12,13 +12,21 @@ import com.facerecognition.R
 import com.facerecognition.util.FaceRecognitionUtil
 import com.facerecognition.facerecognition.Preview
 import com.facerecognition.facerecognition.ProcessImageAndDrawResults
+import com.facerecognition.interfaces.FaceRecognitionInterface
+import com.facerecognition.util.FaceRecognitionUtil.Companion.ACTION_RECOGNITIONFACE
 import com.luxand.FSDK
 import kotlinx.android.synthetic.main.face_recognition.*
 import kotlinx.android.synthetic.main.layout_toolbar_solinftec.view.*
 
-class FaceRecognitionFragment: Fragment() {
+class FaceRecognitionFragment(): Fragment() {
     private var mDraw: ProcessImageAndDrawResults? = null
     private var mPreview: Preview? = null
+    private var listener: FaceRecognitionInterface? = null
+
+    constructor(faceRecognitionInterface: FaceRecognitionInterface) : this() {
+        this.listener = faceRecognitionInterface
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +64,14 @@ class FaceRecognitionFragment: Fragment() {
             FaceRecognitionUtil.initializeFSDK()
 
             // Camera layer and drawing layer
-            mDraw = ProcessImageAndDrawResults(activity!!)
+            mDraw = ProcessImageAndDrawResults(activity!!,
+                ACTION_RECOGNITIONFACE,
+                object : FaceRecognitionInterface {
+                    override fun onFaceAlreadyRegistered(codeRegistered: String) {
+                        listener?.onFaceAlreadyRegistered(codeRegistered)
+                    }
+
+                })
             mPreview = Preview(activity!!, mDraw)
 
             mDraw!!.mTracker = FSDK.HTracker()

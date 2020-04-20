@@ -4,12 +4,12 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import com.facerecognition.R
-import com.facerecognition.util.FaceRecognitionUtil.Companion.ACTION_REGISTER
+import com.facerecognition.interfaces.FaceRecognitionInterface
+import com.facerecognition.util.FaceRecognitionUtil.Companion.ACTION_RECOGNITIONFACE
+import com.facerecognition.util.FaceRecognitionUtil.Companion.ACTION_REGISTERFACE
 import com.facerecognition.util.FaceRectangle
 import com.luxand.FSDK
 import com.luxand.FSDK.CopyImage
@@ -24,9 +24,6 @@ import com.luxand.FSDK.HTracker
 import com.luxand.FSDK.LoadImageFromBuffer
 import com.luxand.FSDK.MirrorImage
 import com.luxand.FSDK.RotateImage90
-import kotlinx.android.synthetic.main.detection_activity.view.*
-import kotlinx.android.synthetic.main.face_recognition.view.*
-import kotlinx.android.synthetic.main.register_face.view.*
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
@@ -43,7 +40,7 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
     var first_frame_saved: Boolean
     var rotated: Boolean
 
-
+    private var listenerFaceDetect: FaceRecognitionInterface? = null
     private var actionScreen = 0
     private var codOperator = ""
     private var mTouchedIndex: Int
@@ -58,6 +55,16 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
     ) : this(context) {
         this.actionScreen = action
         this.codOperator = codOperator
+    }
+
+    constructor(context: Context,
+                action: Int,
+                faceRecognitionInterface: FaceRecognitionInterface
+    ) : this(context) {
+        this.actionScreen = action
+        this.listenerFaceDetect = faceRecognitionInterface
+
+
     }
 
     init {
@@ -185,14 +192,22 @@ class ProcessImageAndDrawResults(context: Context) : View(context) {
                 mTracker?.let { FSDK.GetAllNames(it, IDs[index], names, 1024) }
 
                 if (names.count() > 0 && names[0].isNotEmpty()) {
-                    Log.d("test", names[0])
+                    when (actionScreen) {
+                        ACTION_RECOGNITIONFACE -> {
+                            listenerFaceDetect?.onFaceAlreadyRegistered(names[0])
+                        }
+                    }
+
                     named = true
                 }
             }
 
             if (!named) {
-                if(actionScreen == ACTION_REGISTER) {
-                    registerFace()
+                when (actionScreen) {
+                    ACTION_REGISTERFACE -> {
+                        registerFace()
+                    }
+
                 }
             }
         }

@@ -10,7 +10,7 @@ import com.facerecognition.R
 import com.facerecognition.facerecognition.Preview
 import com.facerecognition.facerecognition.ProcessImageAndDrawResults
 import com.facerecognition.util.FaceRecognitionUtil
-import com.facerecognition.util.FaceRecognitionUtil.Companion.ACTION_REGISTER
+import com.facerecognition.util.FaceRecognitionUtil.Companion.ACTION_REGISTERFACE
 import com.luxand.FSDK
 import com.luxand.FSDK.ClearTracker
 import kotlinx.android.synthetic.main.layout_toolbar_solinftec.view.*
@@ -61,7 +61,7 @@ class RegisterFaceActivity: AppCompatActivity() {
             FaceRecognitionUtil.initializeFSDK()
 
             // Camera layer and drawing layer
-            mDraw = ProcessImageAndDrawResults(this, ACTION_REGISTER, codOperator)
+            mDraw = ProcessImageAndDrawResults(this, ACTION_REGISTERFACE, codOperator)
             mPreview = Preview(this, mDraw)
 
             mDraw!!.mTracker = FSDK.HTracker()

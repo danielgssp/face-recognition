@@ -1,14 +1,17 @@
 package com.facerecognition
 
+import android.view.View
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
+import com.facerecognition.interfaces.FaceRecognitionInterface
 import com.facerecognition.view.fragment.FaceRecognitionFragment
 import java.lang.Exception
 
 class FaceRecognitionHandle() {
     private var activity: FragmentActivity? = null
     private var faceRecognitionFragment: FaceRecognitionFragment? = null
+    var faceAlreadyRegistered: ((codeRegistered: String) -> Unit)? = null
 
     constructor(fragmentActivity: FragmentActivity) : this() {
         this.activity = fragmentActivity
@@ -16,7 +19,11 @@ class FaceRecognitionHandle() {
         buildLayoutFragment()
 
         val ft: FragmentTransaction? = activity?.supportFragmentManager?.beginTransaction()
-        faceRecognitionFragment = FaceRecognitionFragment()
+        faceRecognitionFragment = FaceRecognitionFragment(object : FaceRecognitionInterface {
+            override fun onFaceAlreadyRegistered(codeRegistered: String) {
+                faceAlreadyRegistered?.invoke(codeRegistered)
+            }
+        })
 
         ft?.replace(R.id.face_recognition_fragment, faceRecognitionFragment!!)
         ft?.commit()
@@ -36,7 +43,7 @@ class FaceRecognitionHandle() {
             frameLayout.id = R.id.face_recognition_fragment
             frameLayout.layoutParams = layoutParams
 
-            activity?.setContentView(frameLayout)
+            activity?.addContentView(frameLayout, layoutParams)
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -14,11 +14,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         FaceRecognitionUtil.requestAllPermissions(this)
 
-        /* val detect = DetectionHandle(this, 0.7F)
-        detect.detectPerson = {
-            Log.d("test", "has person")
-        }
+//        val detect = DetectionHandle(this, 0.7F)
+//        detect.detectPerson = {
+//            Log.d("test", "has person")
+//        }
 
-        FaceRecognitionHandle(this) */
+//        val recognitionFace = FaceRecognitionHandle(this)
+//        recognitionFace.faceAlreadyRegistered = {codeRegistered ->
+//            Log.d("test", codeRegistered)
+//        }
     }
 }

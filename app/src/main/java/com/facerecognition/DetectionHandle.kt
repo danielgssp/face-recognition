@@ -1,5 +1,6 @@
 package com.facerecognition
 
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -43,11 +44,11 @@ open class DetectionHandle() {
     private fun buildLayoutFragment() {
        try {
            val frameLayout = FrameLayout(activity?.applicationContext!!)
-           val layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(1, 1)
+           val layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(1,1)
            frameLayout.id = R.id.detection_fragment
            frameLayout.layoutParams = layoutParams
 
-           activity?.setContentView(frameLayout)
+           activity?.addContentView(frameLayout, layoutParams)
        } catch (e: Exception) {
            e.printStackTrace()
        }
