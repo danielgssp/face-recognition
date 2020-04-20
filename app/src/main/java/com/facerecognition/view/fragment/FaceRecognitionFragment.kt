@@ -109,5 +109,4 @@ class FaceRecognitionFragment: Fragment() {
         mDraw!!.mStopped = 0
         mDraw!!.mStopping = 0
     }
-
 }
